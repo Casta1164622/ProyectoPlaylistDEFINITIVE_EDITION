@@ -1,11 +1,16 @@
 #include <iostream>
-#include "Lista.h";
+#include "Lista.h"
 #include "cancion.h" 
+#include <string>
+#include <sstream>
+#include <fstream>
 #include <string>
 
 using namespace std;
 
-void listaCancionesMenu() 
+Lista<cancion> cancionesList;
+
+void listaCancionesMenu()
 {
     string selection;
     int select;
@@ -21,20 +26,53 @@ void listaCancionesMenu()
         cout << "5| guardar lista en un archivo\n";
         cout << "0| Regresar\n";
 
+        string titulo;
+        string artista;
+        cancion addSong;
         getline(cin, selection);
         select = stoi(selection);
+        ifstream archivo;
+        string linea;
+        string posicion;
+        string cancionArt;
 
         switch (select)
         {
         case 1:
+
+            for (int i = 0; i < cancionesList.GetCount(); i++)
+            {
+                cancionesList.GetItem(i);
+                //cout<<
+            }
+
             break;
         case 2:
+            cout << "Ingrese el titulo\n";
+            getline(cin, titulo);
+            cout << "Ingrese el artista\n";
+            getline(cin, artista);
+            addSong = cancion(titulo, artista);
+            cancionesList.Add(addSong);
+
+            cout << "Cancion agregada exitosamente";
+            listaCancionesMenu();
             break;
         case 3:
             break;
         case 4:
+            cout << "Ingrese lugar donde se encuentra el archivo" << endl;
+            getline(cin, posicion);
+            archivo.open(posicion, ios::in);
+
+            while (getline(archivo, linea)) {
+                stringstream stream(linea);
+                getline(stream, cancionArt, ',');
+                cout << cancionArt << endl;
+                //uwu
+            }
             break;
-        case 5: 
+        case 5:
             break;
         case 0:
             return;
@@ -44,7 +82,7 @@ void listaCancionesMenu()
     } while (select != 0);
 }
 
-void listaRepMenu() 
+void listaRepMenu()
 {
     string selection;
     int select;
@@ -93,12 +131,12 @@ void menuPrincipal()
         getline(cin, selection);
         select = stoi(selection);
 
-        switch (select) 
+        switch (select)
         {
         case 1:
             listaCancionesMenu();
             break;
-        case 2: 
+        case 2:
             break;
         case 0:
             return;
@@ -110,19 +148,7 @@ void menuPrincipal()
 
 int main()
 {
-    Lista<cancion> cancionesList;
     menuPrincipal();
-
-    string titulo;
-    string artista;
-
-    cout << "Ingrese el titulo";
-    getline(cin, titulo);
-    cout << "Ingrese el artista";
-    getline(cin, artista);
-
-    cancion addSong = cancion(titulo, artista);
-    cancionesList.Add(addSong);
 
 }
 
