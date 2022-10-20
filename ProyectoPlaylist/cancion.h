@@ -12,6 +12,10 @@ public:
 	{
 		Titulo = titulo;
 		Artista = artista;
+		if (artista == "") 
+		{
+			Artista = "Desconocido";
+		}
 	}
 
 	string getArtista()

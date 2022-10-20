@@ -10,6 +10,93 @@ using namespace std;
 
 Lista<cancion> cancionesList;
 
+void ordenarListaPorTituloAZ() 
+{
+    int i, j, min_idx;
+    cancion tmp;
+    int n = cancionesList.GetCount();
+
+    for (i = 0; i < n - 1; i++) 
+    {
+        min_idx = i;
+        for (j = i + 1; j < n; j++) 
+        {
+            if (cancionesList.GetItem(j)->data.getTitulo().compare(cancionesList.GetItem(min_idx)->data.getTitulo()) < 0)
+            {
+                min_idx = j;
+            }
+        }
+        tmp = cancionesList.GetItem(min_idx)->data;
+        cancionesList.GetItem(min_idx)->data = cancionesList.GetItem(i)->data;
+        cancionesList.GetItem(i)->data = tmp;
+    }
+}
+
+void ordenarListaPorTituloZA()
+{
+    int i, j, min_idx;
+    cancion tmp;
+    int n = cancionesList.GetCount();
+
+    for (i = 0; i < n - 1; i++)
+    {
+        min_idx = i;
+        for (j = i + 1; j < n; j++)
+        {
+            if (cancionesList.GetItem(j)->data.getTitulo().compare(cancionesList.GetItem(min_idx)->data.getTitulo()) > 0)
+            {
+                min_idx = j;
+            }
+        }
+        tmp = cancionesList.GetItem(min_idx)->data;
+        cancionesList.GetItem(min_idx)->data = cancionesList.GetItem(i)->data;
+        cancionesList.GetItem(i)->data = tmp;
+    }
+}
+
+void ordenarListaPorArtistaAZ()
+{
+    int i, j, min_idx;
+    cancion tmp;
+    int n = cancionesList.GetCount();
+
+    for (i = 0; i < n - 1; i++)
+    {
+        min_idx = i;
+        for (j = i + 1; j < n; j++)
+        {
+            if (cancionesList.GetItem(j)->data.getArtista().compare(cancionesList.GetItem(min_idx)->data.getArtista()) < 0)
+            {
+                min_idx = j;
+            }
+        }
+        tmp = cancionesList.GetItem(min_idx)->data;
+        cancionesList.GetItem(min_idx)->data = cancionesList.GetItem(i)->data;
+        cancionesList.GetItem(i)->data = tmp;
+    }
+}
+
+void ordenarListaPorArtistaZA()
+{
+    int i, j, min_idx;
+    cancion tmp;
+    int n = cancionesList.GetCount();
+
+    for (i = 0; i < n - 1; i++)
+    {
+        min_idx = i;
+        for (j = i + 1; j < n; j++)
+        {
+            if (cancionesList.GetItem(j)->data.getArtista().compare(cancionesList.GetItem(min_idx)->data.getArtista()) > 0)
+            {
+                min_idx = j;
+            }
+        }
+        tmp = cancionesList.GetItem(min_idx)->data;
+        cancionesList.GetItem(min_idx)->data = cancionesList.GetItem(i)->data;
+        cancionesList.GetItem(i)->data = tmp;
+    }
+}
 
 void mostrarListaDeCanciones()
 {
@@ -25,10 +112,12 @@ void mostrarListaDeCanciones()
             lookatSong = cancionesList.GetItem(i)->data;
             cout << display + "| " + lookatSong.getTitulo() + " - " + lookatSong.getArtista() + "\n";
         }
+        return;
     }
     else 
     {
         cout << "No hay canciones en la lista\n";
+        return;
     }
 }
 
@@ -97,16 +186,23 @@ void listaShowMenu()
         case 1:
             break;
         case 2: 
+            ordenarListaPorTituloAZ();
+            listaShowMenu();
             break;
         case 3:
+            ordenarListaPorTituloZA();
+            listaShowMenu();
             break;
         case 4:
+            ordenarListaPorArtistaAZ();
+            listaShowMenu();
             break;
         case 5:
+            ordenarListaPorArtistaZA();
+            listaShowMenu();
             break;
         case 0:
             return;
-            break;
         default:
             listaShowMenu();
             break;
@@ -198,8 +294,9 @@ void listaRepMenu()
         cout << "\033[2J\033[1;1H";
         cout << "Lista de reproduccion\n";
         cout << "Seleccione una opcion\n";
-        cout << "1| Mostrar lista de reproduccion\n";
-        cout << "2| Agregar cancion a la lista de reproduccion\n";
+        cout << "1| Reproducir cancion\n";
+        cout << "2| Cancion anterior\n";
+        cout << "3| Siguiente cancion\n";
         cout << "0| Regresar\n";
 
         getline(cin, selection);
@@ -210,6 +307,8 @@ void listaRepMenu()
         case 1:
             break;
         case 2:
+            break;
+        case 3: 
             break;
         case 0:
             return;
