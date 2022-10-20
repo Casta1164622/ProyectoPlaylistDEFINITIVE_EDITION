@@ -10,6 +10,111 @@ using namespace std;
 
 Lista<cancion> cancionesList;
 
+
+void mostrarListaDeCanciones()
+{
+    cancion lookatSong;
+    int number;
+    string display;
+    if (cancionesList.GetCount() > 0) 
+    {
+        for (int i = 0; i < cancionesList.GetCount(); i++)
+        {
+            number = i + 1;
+            display = to_string(number);
+            lookatSong = cancionesList.GetItem(i)->data;
+            cout << display + "| " + lookatSong.getTitulo() + " - " + lookatSong.getArtista() + "\n";
+        }
+    }
+    else 
+    {
+        cout << "No hay canciones en la lista\n";
+    }
+}
+
+void listaDelMenu() 
+{
+    string selection;
+    int select;
+
+    do 
+    {
+        cout << "\033[2J\033[1;1H";
+        cout << "Eliminar cancion de la lista\n";
+        cout << "canciones en la lista:\n";
+        mostrarListaDeCanciones();
+        cout << "----------------------------------------\n";
+        cout << "Seleccione la cancion que desea elimianar\n";
+        cout << "0| Regresar\n";
+
+        getline(cin, selection);
+        select = stoi(selection);
+
+        if (select == 0) 
+        {
+            return;
+        }
+
+        if (select > cancionesList.GetCount())
+        {
+            "No se ingreso una entrada valida\n";
+        }
+        else 
+        {
+            cancionesList.RemoveAt(select - 1);
+            listaDelMenu();
+        }
+
+    } while (select != 0);
+
+    
+}
+
+void listaShowMenu() 
+{
+    string selection;
+    int select;
+
+    do
+    {
+        cout << "\033[2J\033[1;1H";
+        cout << "canciones en la lista:\n";
+        mostrarListaDeCanciones();
+        cout << "----------------------------------------\n";
+        cout << "Seleccione una opcion\n";
+        cout << "1| Agregar cancion a la lista de reproduccion\n";
+        cout << "2| Ordenar lista segun titulo A-Z\n";
+        cout << "3| Ordenar lista segun titulo Z-A\n";
+        cout << "4| Ordenar lista segun artista A-Z\n";
+        cout << "5| Ordenar lista segun artista Z-A\n";
+        cout << "0| Regresar\n";
+
+        getline(cin, selection);
+        select = stoi(selection);
+
+        switch (select) 
+        {
+        case 1:
+            break;
+        case 2: 
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        case 0:
+            return;
+            break;
+        default:
+            listaShowMenu();
+            break;
+        }
+    } while (select != 0);
+
+}
+
 void listaCancionesMenu()
 {
     string selection;
@@ -17,6 +122,7 @@ void listaCancionesMenu()
 
     do
     {
+        cout << "\033[2J\033[1;1H";
         cout << "Lista de canciones\n";
         cout << "Seleccione una opcion\n";
         cout << "1| Mostrar lista de canciones\n";
@@ -29,22 +135,19 @@ void listaCancionesMenu()
         string titulo;
         string artista;
         cancion addSong;
-        getline(cin, selection);
-        select = stoi(selection);
         ifstream archivo;
         string linea;
         string posicion;
         string cancionArt;
 
+        getline(cin, selection);
+        select = stoi(selection);
+
+
         switch (select)
         {
         case 1:
-
-            for (int i = 0; i < cancionesList.GetCount(); i++)
-            {
-                cancionesList.GetItem(i);
-                //cout<<
-            }
+            listaShowMenu();
 
             break;
         case 2:
@@ -58,7 +161,10 @@ void listaCancionesMenu()
             cout << "Cancion agregada exitosamente";
             listaCancionesMenu();
             break;
+
         case 3:
+
+            listaDelMenu();
             break;
         case 4:
             cout << "Ingrese lugar donde se encuentra el archivo" << endl;
@@ -69,13 +175,13 @@ void listaCancionesMenu()
                 stringstream stream(linea);
                 getline(stream, cancionArt, ',');
                 cout << cancionArt << endl;
-                //uwu
             }
             break;
         case 5:
             break;
         case 0:
             return;
+            break;
         default:
             listaCancionesMenu();
         }
@@ -89,11 +195,11 @@ void listaRepMenu()
 
     do
     {
+        cout << "\033[2J\033[1;1H";
         cout << "Lista de reproduccion\n";
         cout << "Seleccione una opcion\n";
         cout << "1| Mostrar lista de reproduccion\n";
-        cout << "2| \n";
-        cout << "3| Quitar cancion de la lista\n";
+        cout << "2| Agregar cancion a la lista de reproduccion\n";
         cout << "0| Regresar\n";
 
         getline(cin, selection);
@@ -105,10 +211,9 @@ void listaRepMenu()
             break;
         case 2:
             break;
-        case 3:
-            break;
         case 0:
             return;
+            break;
         default:
             listaRepMenu();
         }
@@ -122,6 +227,7 @@ void menuPrincipal()
 
     do
     {
+        cout << "\033[2J\033[1;1H";
         cout << "Proyecto Playlist CastaRito\n";
         cout << "Seleccione una opcion\n";
         cout << "1| Lista de canciones\n";
@@ -137,6 +243,7 @@ void menuPrincipal()
             listaCancionesMenu();
             break;
         case 2:
+            listaRepMenu();
             break;
         case 0:
             return;
@@ -149,7 +256,7 @@ void menuPrincipal()
 int main()
 {
     menuPrincipal();
-
+    return 0;
 }
 
 

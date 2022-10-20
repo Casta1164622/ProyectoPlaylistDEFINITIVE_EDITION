@@ -42,11 +42,14 @@ private:
         else
         {
             node* newTail = head;
-            while (newTail->next->next != NULL)
+            while (newTail->next->next != NULL) 
+            {
                 newTail = newTail->next;
-            delete (newTail->next);
-            newTail->next = NULL;
-            tail = newTail;
+                delete (newTail->next);
+                newTail->next = NULL;
+                tail = newTail;
+            }
+                
         }
 
     }
@@ -214,6 +217,11 @@ public:
 
     void RemoveAt(int index)
     {
+        if (index == 0 && GetCount() == 1) 
+        {
+            Clear();
+        }
+
         if (GetItem(index) != NULL)
         {
             remove(GetItem(index));
