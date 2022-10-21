@@ -1,17 +1,50 @@
 #include <iostream>
 #include "Lista.h"
 #include "cancion.h" 
+#include "Stack.h"
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <cstdlib>
 
 using namespace std;
 
 Lista<cancion> cancionesList;
+Stack<cancion> repList;
+Stack<cancion> histRepList;
+cancion reproduciendo;
+int playNum = 0;
+
+void listaShowMenu();
+void menuPrincipal();
+void listaCancionesMenu();
+
+void ordenarListaDesconocidos()
+{
+    int i, j, min_idx;
+    cancion tmp;
+    int n = cancionesList.GetCount();
+
+    for (i = 0; i < n - 1; i++)
+    {
+        min_idx = i;
+        for (j = i + 1; j < n; j++)
+        {
+            if (cancionesList.GetItem(j)->data.getArtista() != "Desconocido")
+            {
+                min_idx = j;
+            }
+        }
+        tmp = cancionesList.GetItem(min_idx)->data;
+        cancionesList.GetItem(min_idx)->data = cancionesList.GetItem(i)->data;
+        cancionesList.GetItem(i)->data = tmp;
+    }
+}
 
 void ordenarListaPorTituloAZ() 
 {
+    ordenarListaDesconocidos();
     int i, j, min_idx;
     cancion tmp;
     int n = cancionesList.GetCount();
@@ -21,7 +54,7 @@ void ordenarListaPorTituloAZ()
         min_idx = i;
         for (j = i + 1; j < n; j++) 
         {
-            if (cancionesList.GetItem(j)->data.getTitulo().compare(cancionesList.GetItem(min_idx)->data.getTitulo()) < 0)
+            if (cancionesList.GetItem(j)->data.getTitulo().compare(cancionesList.GetItem(min_idx)->data.getTitulo()) < 0 && cancionesList.GetItem(j)->data.getArtista() != "Desconocido")
             {
                 min_idx = j;
             }
@@ -34,6 +67,7 @@ void ordenarListaPorTituloAZ()
 
 void ordenarListaPorTituloZA()
 {
+    ordenarListaDesconocidos();
     int i, j, min_idx;
     cancion tmp;
     int n = cancionesList.GetCount();
@@ -43,7 +77,7 @@ void ordenarListaPorTituloZA()
         min_idx = i;
         for (j = i + 1; j < n; j++)
         {
-            if (cancionesList.GetItem(j)->data.getTitulo().compare(cancionesList.GetItem(min_idx)->data.getTitulo()) > 0)
+            if (cancionesList.GetItem(j)->data.getTitulo().compare(cancionesList.GetItem(min_idx)->data.getTitulo()) > 0 && cancionesList.GetItem(j)->data.getArtista() != "Desconocido")
             {
                 min_idx = j;
             }
@@ -56,6 +90,7 @@ void ordenarListaPorTituloZA()
 
 void ordenarListaPorArtistaAZ()
 {
+    ordenarListaDesconocidos();
     int i, j, min_idx;
     cancion tmp;
     int n = cancionesList.GetCount();
@@ -65,7 +100,7 @@ void ordenarListaPorArtistaAZ()
         min_idx = i;
         for (j = i + 1; j < n; j++)
         {
-            if (cancionesList.GetItem(j)->data.getArtista().compare(cancionesList.GetItem(min_idx)->data.getArtista()) < 0)
+            if (cancionesList.GetItem(j)->data.getArtista().compare(cancionesList.GetItem(min_idx)->data.getArtista()) < 0 && cancionesList.GetItem(j)->data.getArtista() != "Desconocido")
             {
                 min_idx = j;
             }
@@ -78,6 +113,7 @@ void ordenarListaPorArtistaAZ()
 
 void ordenarListaPorArtistaZA()
 {
+    ordenarListaDesconocidos();
     int i, j, min_idx;
     cancion tmp;
     int n = cancionesList.GetCount();
@@ -87,7 +123,7 @@ void ordenarListaPorArtistaZA()
         min_idx = i;
         for (j = i + 1; j < n; j++)
         {
-            if (cancionesList.GetItem(j)->data.getArtista().compare(cancionesList.GetItem(min_idx)->data.getArtista()) > 0)
+            if (cancionesList.GetItem(j)->data.getArtista().compare(cancionesList.GetItem(min_idx)->data.getArtista()) > 0 && cancionesList.GetItem(j)->data.getArtista() != "Desconocido")
             {
                 min_idx = j;
             }
@@ -121,11 +157,16 @@ void mostrarListaDeCanciones()
     }
 }
 
+bool is_number(const std::string& s)
+{
+    return !s.empty() && std::find_if(s.begin(),
+        s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
+}
+
 void listaDelMenu() 
 {
     string selection;
     int select;
-
     do 
     {
         cout << "\033[2J\033[1;1H";
@@ -137,7 +178,12 @@ void listaDelMenu()
         cout << "0| Regresar\n";
 
         getline(cin, selection);
-        select = stoi(selection);
+
+        if (is_number(selection)) 
+        {
+            select = stoi(selection);
+        }
+        else { select = 100000000; }
 
         if (select == 0) 
         {
@@ -155,14 +201,15 @@ void listaDelMenu()
         }
 
     } while (select != 0);
+    listaShowMenu();
 
     
 }
 
 void listaShowMenu() 
 {
-    string selection;
-    int select;
+    string selection, songSelection;
+    int select, songSelect;
 
     do
     {
@@ -179,11 +226,36 @@ void listaShowMenu()
         cout << "0| Regresar\n";
 
         getline(cin, selection);
-        select = stoi(selection);
+
+        if (is_number(selection))
+        {
+            select = stoi(selection);
+        }
+        else { select = 100000000; }
 
         switch (select) 
         {
         case 1:
+
+            cout << "Ingrese la cancion que desea agregar a la lista de reproduccion\n";
+
+            getline(cin, songSelection);
+
+            if (is_number(songSelection))
+            {
+                songSelect = stoi(songSelection);
+            }
+            else { songSelect = 100000000; }
+
+            if (songSelect > cancionesList.GetCount() || songSelect == 0)
+            {
+                "No se ingreso una entrada valida\n";
+            }
+            else
+            {
+                repList.push(cancionesList.GetItem(songSelect - 1)->data);
+                listaShowMenu();
+            }
             break;
         case 2: 
             ordenarListaPorTituloAZ();
@@ -202,6 +274,7 @@ void listaShowMenu()
             listaShowMenu();
             break;
         case 0:
+            listaCancionesMenu();
             return;
         default:
             listaShowMenu();
@@ -237,14 +310,17 @@ void listaCancionesMenu()
         string cancionArt;
 
         getline(cin, selection);
-        select = stoi(selection);
-
+        
+        if (is_number(selection))
+        {
+            select = stoi(selection);
+        }
+        else { select = 100000000; }
 
         switch (select)
         {
         case 1:
             listaShowMenu();
-
             break;
         case 2:
             cout << "Ingrese el titulo\n";
@@ -276,6 +352,7 @@ void listaCancionesMenu()
         case 5:
             break;
         case 0:
+            menuPrincipal();
             return;
             break;
         default:
@@ -293,24 +370,108 @@ void listaRepMenu()
     {
         cout << "\033[2J\033[1;1H";
         cout << "Lista de reproduccion\n";
+        if (reproduciendo.getTitulo() == "")
+        {
+            cout << "---------------------------------\n";
+            cout << "No se esta reproduciendo ninguna cancion\n";
+            cout << "---------------------------------\n";
+        }
+        else
+        {
+            cout << "---------------------------------\n";
+            cout << "Reproduciendo: " + reproduciendo.getTitulo() + " - " + reproduciendo.getArtista() + "\n";
+            cout << "---------------------------------\n";
+        }
+        if (repList.get_size() == 0) 
+        {
+            cout << "---------------------------------\n";
+            cout << ">> No hay mas canciones despues de esta\n";
+            cout << "---------------------------------\n";
+        }
+        else 
+        {
+            cout << "---------------------------------\n";
+            cout << ">> Siguiente cancion: " + repList.peek().getTitulo() + " - " + repList.peek().getArtista() + "\n";
+            cout << "---------------------------------\n";
+        }
+        if (histRepList.get_size() == 0)
+        {
+            cout << "---------------------------------\n";
+            cout << "<< No hay mas canciones antes de esta\n";
+            cout << "---------------------------------\n";
+        }
+        else
+        {
+            cout << "---------------------------------\n";
+            cout << "<< Cancion anterior: " + histRepList.peek().getTitulo() + " - " + histRepList.peek().getArtista() + "\n";
+            cout << "---------------------------------\n";
+        }
         cout << "Seleccione una opcion\n";
-        cout << "1| Reproducir cancion\n";
-        cout << "2| Cancion anterior\n";
-        cout << "3| Siguiente cancion\n";
+        cout << "1| Reproducir siguiente cancion\n";
+        cout << "2| Reproducir cancion anterior\n";
         cout << "0| Regresar\n";
 
         getline(cin, selection);
-        select = stoi(selection);
+
+        if (is_number(selection))
+        {
+            select = stoi(selection);
+        }
+        else { select = 100000000; }
+
+        cancion canciontmp;
+
+        if (selection == "")
+        {
+            select = 10;
+        }
 
         switch (select)
         {
         case 1:
+
+            if (repList.get_size() == 0) 
+            {
+                reproduciendo.setTitulo("");
+            }
+            else 
+            {
+                if (playNum > 0) 
+                {
+                    canciontmp = repList.pop();
+                    histRepList.push(reproduciendo);
+                    reproduciendo = canciontmp;
+                    playNum++;
+                }
+                else 
+                {
+                    canciontmp = repList.pop();
+                    reproduciendo = canciontmp;
+                    playNum++;
+                }
+            }
+            listaRepMenu();
             break;
         case 2:
-            break;
-        case 3: 
+
+            if (histRepList.get_size() == 0)
+            {
+                reproduciendo.setTitulo("");
+            }
+            else
+            {
+                canciontmp = histRepList.pop();
+                repList.push(reproduciendo);
+                reproduciendo = canciontmp;
+                if (playNum != 0) 
+                {
+                    playNum--;
+                }
+            }
+            listaRepMenu();
             break;
         case 0:
+            menuPrincipal();
             return;
             break;
         default:
@@ -334,7 +495,17 @@ void menuPrincipal()
         cout << "0| Salir del programa\n";
 
         getline(cin, selection);
-        select = stoi(selection);
+        
+        if (is_number(selection))
+        {
+            select = stoi(selection);
+        }
+        else { select = 100000000; }
+
+        if (selection == "") 
+        {
+            select = 10;
+        }
 
         switch (select)
         {
@@ -345,6 +516,7 @@ void menuPrincipal()
             listaRepMenu();
             break;
         case 0:
+            exit(0);
             return;
         default:
             menuPrincipal();

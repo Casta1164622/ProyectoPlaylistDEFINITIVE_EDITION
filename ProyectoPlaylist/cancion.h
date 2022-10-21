@@ -16,6 +16,10 @@ public:
 		{
 			Artista = "Desconocido";
 		}
+		if (titulo == "") 
+		{
+			Titulo = "Sin titulo";
+		}
 	}
 
 	string getArtista()
@@ -25,5 +29,9 @@ public:
 	string getTitulo()
 	{
 		return Titulo;
+	}
+	void setTitulo(string titulo) 
+	{
+		Titulo = titulo;
 	}
 };
