@@ -19,6 +19,8 @@ int playNum = 0;
 void listaShowMenu();
 void menuPrincipal();
 void listaCancionesMenu();
+void GuardarFile();
+void LeerFile();
 
 void ordenarListaDesconocidos()
 {
@@ -339,17 +341,10 @@ void listaCancionesMenu()
             listaDelMenu();
             break;
         case 4:
-            cout << "Ingrese lugar donde se encuentra el archivo" << endl;
-            getline(cin, posicion);
-            archivo.open(posicion, ios::in);
-
-            while (getline(archivo, linea)) {
-                stringstream stream(linea);
-                getline(stream, cancionArt, ',');
-                cout << cancionArt << endl;
-            }
+            LeerFile();
             break;
         case 5:
+            GuardarFile();
             break;
         case 0:
             menuPrincipal();
@@ -360,6 +355,67 @@ void listaCancionesMenu()
         }
     } while (select != 0);
 }
+
+void GuardarFile() {
+    string posarchiv;
+    cout << "Ingrese lugar donde desea guardar el archivo" << endl;
+    getline(cin, posarchiv);
+    ofstream archivo;
+    archivo.open(posarchiv, ios::out);
+    if (archivo.fail()) {
+        cout << "no se puede crear archivo" << endl;
+    }
+    for (int i = 0; i < cancionesList.GetCount(); i++) {
+        archivo << cancionesList.GetItem(i)->data.getTitulo() << "-" << cancionesList.GetItem(i)->data.getArtista() << endl;
+    }
+    archivo.close();
+}
+
+void LeerFile() {
+    ifstream archivo;
+    string linea;
+    string posarchiv;
+    string cancionArt;
+    
+    const char* ptr;
+    
+
+    system("cls");
+    cancionesList.Clear();
+    cout << "Ingrese lugar donde se encuentra el archivo" << endl;
+    getline(cin, posarchiv);
+    if (posarchiv == "")
+    {
+        cout << "No ingreso correctamente la posicion del archivo que quiere leer, vuelva a intentarlo \n" << endl;
+    }
+    else {
+        archivo.open(posarchiv, ios::in);
+        cout << "-----------------------------------" << endl;
+        cout << "---------------Lista---------------" << endl;
+
+        while (getline(archivo, linea)) {
+            stringstream stream(linea);
+            getline(stream, cancionArt, ',');
+            cout << cancionArt << endl;
+            string delm1 = "-";
+            size_t pos = 0;
+            string token;
+            while ((pos = cancionArt.find(delm1)) != string::npos) {
+                token = cancionArt.substr(0, pos);
+                cancionArt.erase(0, pos + delm1.length());
+                string nombre = token;
+                string artsts = cancionArt;
+                cancion añadir = cancion(nombre, artsts);
+                cancionesList.Add(añadir);
+            }
+            
+            
+        }
+        cout << "----------------------------------" << endl;
+        archivo.close();
+    }
+}
+
 
 void listaRepMenu()
 {
