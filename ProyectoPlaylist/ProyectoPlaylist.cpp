@@ -488,7 +488,11 @@ void listaRepMenu()
 
             if (repList.get_size() == 0) 
             {
-                reproduciendo.setTitulo("");
+                if (reproduciendo.getTitulo() != "")
+                {
+                    histRepList.push(reproduciendo);
+                    reproduciendo.setTitulo("");
+                }
             }
             else 
             {
@@ -512,7 +516,11 @@ void listaRepMenu()
 
             if (histRepList.get_size() == 0)
             {
-                reproduciendo.setTitulo("");
+                if (reproduciendo.getTitulo() != "")
+                {
+                    repList.push(reproduciendo);
+                    reproduciendo.setTitulo("");
+                }
             }
             else
             {
