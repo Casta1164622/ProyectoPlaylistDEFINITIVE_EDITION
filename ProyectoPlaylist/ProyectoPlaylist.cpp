@@ -171,7 +171,7 @@ void listaDelMenu()
     int select;
     do 
     {
-        cout << "\033[2J\033[1;1H";
+        system("cls");
         cout << "Eliminar cancion de la lista\n";
         cout << "canciones en la lista:\n";
         mostrarListaDeCanciones();
@@ -215,7 +215,7 @@ void listaShowMenu()
 
     do
     {
-        cout << "\033[2J\033[1;1H";
+        system("cls");
         cout << "canciones en la lista:\n";
         mostrarListaDeCanciones();
         cout << "----------------------------------------\n";
@@ -293,7 +293,7 @@ void listaCancionesMenu()
 
     do
     {
-        cout << "\033[2J\033[1;1H";
+        system("cls");
         cout << "Lista de canciones\n";
         cout << "Seleccione una opcion\n";
         cout << "1| Mostrar lista de canciones\n";
@@ -424,7 +424,7 @@ void listaRepMenu()
 
     do
     {
-        cout << "\033[2J\033[1;1H";
+        system("cls");
         cout << "Lista de reproduccion\n";
         if (reproduciendo.getTitulo() == "")
         {
@@ -551,7 +551,7 @@ void menuPrincipal()
 
     do
     {
-        cout << "\033[2J\033[1;1H";
+        system("cls");
         cout << "Proyecto Playlist CastaRito\n";
         cout << "Seleccione una opcion\n";
         cout << "1| Lista de canciones\n";
